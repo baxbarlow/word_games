@@ -1,26 +1,27 @@
-"""with open("scrabble.txt", 'r') as f:
-	count = 0
-	for line in f:
-		if count > 5:
-			break
-		print(line)
-		count = count + 1
-"""
-def is_word(word):
-	with open("scrabble.txt", 'r') as f:
+
+def computer_chose(word):
+	with open("word_games/scrabble.txt", 'r') as f:
 		for line in f:
-			if line == word:
-				print("found")
+			if line[0:len(word)] == word:
+				if len(line) - 1 > len(word):
+					return line[0:len(word) + 1]
+		return None
+		
+def is_word(word):
+	with open("word_games/scrabble.txt", 'r') as f:
+		for line in f:
+			longest = ""
+			if line[0:len(line)-1] == word:
+				return True
+		return False
+		print("not found")
 
 def go_through(letters, word):
-	with open("scrabble.txt", 'r') as f:
+	with open("word_games/scrabble.txt", 'r') as f:
 		for line in f:
-			#print(line[0: letters])
 			if line[0:letters] == word:
 				return True
 		return False
-
-
 
 word = ""
 game_going = True
@@ -28,15 +29,25 @@ while game_going:
 	appending = input("next letter: ")
 	if len(appending) != 1:
 		print("improper input")
-	elif appending == 'quit':
+	elif appending == 'q':
 		break
 	else:
 		word += appending
-		print(word)
-		print(len(word))
-		print(is_word(word))
-		#print(go_through(len(word), word))
-		"""if go_through(len(word), word):
-			print("going to be a word")
+		if (not go_through(len(word), word)):
+			print("Cannot turn into a word; you lose")
+			word = ""
+			break
+		elif is_word(word) and len(word) > 3:
+			print("You made a word; you lose")
+			word = ""
 		else:
-			print("no")"""
+			print(word)
+		if computer_chose(word) == None:
+			print("you win, the computer couldn't make a valid word")
+		else:
+			word = computer_chose(word)
+			if is_word(word) and len(word) > 3:
+				print("computer said: " + word + ", you win")
+				word = ""
+			else:
+				print("Computer made the new word: " + word)
